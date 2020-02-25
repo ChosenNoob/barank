@@ -1,16 +1,17 @@
-{% extends "base.html" %}
-
-{% block content %}
-<h1>Chat with {{other}}</h1>
 {% load static %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/chat.css' %}">
-<script src="{% static 'js/chat.js' %}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
+<script type="text/javascript">
+	me="{{me}}";
+	pair="{{pair}}"
+
+</script>
 
 <div class="panel panel-primary" style="border:0px">
                 <div class="panel-heading top-bar">
                     <div class="col-md-8 col-xs-8">
-                        <h3 class="panel-title"><span class="glyphicon glyphicon-comment" style="margin-right:6px;"></span>College Enquiry Chat</h3>
+                        <h3 class="panel-title"><span class="glyphicon glyphicon-comment" style="margin-right:6px;"></span>Chat with {{ pair }}</h3>
                     </div>
                 </div>
 
@@ -61,13 +62,30 @@ window.alert = function(){};
             else $('head > link').filter(':first').replaceWith(defaultCSS); 
         }
         
-$("#submit").click(function() {
-    var data = $("#btn-input").val();
-        //console.log(data);
-        $('chat_log').append('<div class="row msg_container base_sent"><div class="col-md-10 col-xs-10"><div class="messages msg_receive"><p>'+data+'</p></div></div></div><div class="row msg_container base_receive"><div class="col-md-10 col-xs-10"><div class="messages msg_receive"><p>'+data+'</p></div></div></div>');
-        clearInput();
-        $(".msg_container_base").stop().animate({ scrollTop: $(".msg_container_base")[0].scrollHeight}, 1000);
-});
+// $("#submit").click(function() {
+//     var data = $("#btn-input").val();
+//         //console.log(data);
+//         $('chat_log').append('<div class="row msg_container base_sent"><div class="col-md-10 col-xs-10"><div class="messages msg_receive"><p>'+data+'</p></div></div></div><div class="row msg_container base_receive"><div class="col-md-10 col-xs-10"><div class="messages msg_receive"><p>'+data+'</p></div></div></div>');
+//         clearInput();
+//         $(".msg_container_base").stop().animate({ scrollTop: $(".msg_container_base")[0].scrollHeight}, 1000);
+// });
+$("#submit").click(sendMessage)
+function sendMessage(){
+	var message = {text: $("#btn-input").val(),
+					me:me,
+					pair:pair,
+					csrfmiddlewaretoken : '{{ csrf_token }}'
+				}
+    $.ajax({
+            type: "POST",
+            url : "/sendMessage/",
+            data: message,
+            success: function (response) {
+
+				}
+			}
+        );
+}
 
 function clearInput() {
     $("#myForm :input").each(function() {
@@ -79,4 +97,3 @@ $("#myForm").submit(function() {
     return false; //to prevent redirection to save.php
 });
 </script>
-{% endblock %}

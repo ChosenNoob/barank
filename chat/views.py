@@ -19,4 +19,17 @@ def index(request):
 def chat(request):
 	if request.method == 'GET':
 		user = User.objects.get(id=request.user.id)
-		return render(request, 'chat.html', {'pair': request.GET['pair']})		
+		return render(request, 'chat.html', {'me': request.user.username, 'pair': request.GET['pair']})
+
+@login_required
+def getMessages(request):
+	# messages = Message.objects.filter(time__lte=)
+	pass
+
+@login_required
+def sendMessage(request):
+	print(request.POST['me'])
+	sender = User.objects.get(id=request.user.id)
+	reciever = User.objects.get(username=request.POST['pair'])
+	obj = Message.objects.create(text=request.POST['text'], sender=sender, reciever=reciever)
+	pass	

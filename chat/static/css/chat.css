@@ -2,7 +2,8 @@
   background: #e5e5e5;
   margin: 0;
   padding: 0 10px 10px;
-  max-height:80vh;
+  min-height: 70vh;
+  max-height: 70vh;
   overflow-x:hidden;
 }
 .top-bar {
@@ -14,14 +15,16 @@
 }
 .msg_receive{
     padding-left:0;
-    margin-left:0;
+    margin-left:5;
+    background: paleturquoise;
 }
 .msg_sent{
-    padding-bottom:20px !important;
-    margin-right:0;
+    padding-bottom:10px !important;
+    margin-right:5;
+    background: white;
+
 }
 .messages {
-  background: white;
   padding: 10px;
   border-radius: 2px;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
@@ -36,13 +39,14 @@
     color: #ccc;
 }
 .msg_container {
-    padding: 10px;
-    overflow: hidden;
-    display: block;
+    padding: 1px;
+    /*overflow: hidden;*/
+    display: flex;
 }
 img {
     display: block;
     width: 100%;
+    height: 100%;
 }
 .avatar {
     position: relative;
