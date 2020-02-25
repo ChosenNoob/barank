@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class Message(models.Model):
 	text = models.TextField()
-	time = models.DateField(auto_now=True)
+	time = models.DateTimeField(auto_now=True)
 	sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
 	reciever = models.ForeignKey(User, on_delete=models.CASCADE, related_name='recieved_messages')
 

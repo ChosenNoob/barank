@@ -23,13 +23,11 @@ def chat(request):
 
 @login_required
 def getMessages(request):
-	# messages = Message.objects.filter(time__lte=)
+	messages = Message.objects.filter(time__lte=datetime.date.today())
 	pass
 
 @login_required
 def sendMessage(request):
-	print(request.POST['me'])
-	sender = User.objects.get(id=request.user.id)
+	sender = User.objects.get(id=request.POST['me'])
 	reciever = User.objects.get(username=request.POST['pair'])
 	obj = Message.objects.create(text=request.POST['text'], sender=sender, reciever=reciever)
-	pass	
