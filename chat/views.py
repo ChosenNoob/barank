@@ -45,7 +45,7 @@ def getNewMessages(request):
 	# print(messages)
 	# print('---------')
 	# messages = messages.exclude(time__lte=request.POST['timestamp']).order_by('time')
-	messages = messages.exclude(order__gt=request.POST['timestamp']).order_by('order')
+	messages = messages.filter(order__gt=request.POST['timestamp']).order_by('order')
 	print(messages)
 	data = serializers.serialize('json', messages)
 	return HttpResponse(data, content_type="application/json")
