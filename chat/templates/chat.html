@@ -55,6 +55,11 @@
 </div>
 
 <script type="text/javascript">
+	got = false;
+	getMessages();
+// window.setInterval(function(){
+// 	getNewMessages();
+// }, 100);
 window.alert = function(){};
         var defaultCSS = document.getElementById('bootstrap-css');
         function changeCSS(css){
@@ -69,22 +74,84 @@ window.alert = function(){};
 //         clearInput();
 //         $(".msg_container_base").stop().animate({ scrollTop: $(".msg_container_base")[0].scrollHeight}, 1000);
 // });
-$("#submit").click(sendMessage)
+function addSentMessage(data)
+{
+	$('chat_log').append(
+	'<div class="row msg_container base_sent"><div class="col-md-10 col-xs-10"><div class="messages msg_receive"><p>'+data+'</p></div></div></div>')
+}
+function addRecievedMessage(data)
+{
+	$('chat_log').append('<div class="row msg_container base_receive"><div class="col-md-10 col-xs-10"><div class="messages msg_receive"><p>'+data+'</p></div></div></div>')
+}
+$("#submit").click(
 function sendMessage(){
+	
 	var message = {text: $("#btn-input").val(),
 					me:me,
 					pair:pair,
 					csrfmiddlewaretoken : '{{ csrf_token }}'
-				}
+				};
     $.ajax({
             type: "POST",
             url : "/sendMessage/",
             data: message,
-            success: function (response) {
+        	success: function (response) {
+            	clearInput()
+				}});
+}
+)
 
-				}
-			}
-        );
+function getMessages(){
+	
+	var data = {
+					me:me,
+					pair:pair,
+					csrfmiddlewaretoken : '{{ csrf_token }}'
+				};
+    $.ajax({
+            type: "POST",
+            url : "/getMessages/",
+            data: data,
+        	success: function (response) {
+        		x = response;
+        		timestamp = response[response.length-1]["fields"]["order"]
+        		got = true;
+        		for (var i = 0; i < response.length; i++) {
+        			if (response[i]["fields"]["sender"] == me) {
+        				addSentMessage(response[i]["fields"]["text"])
+        			}
+        			else{
+        				addRecievedMessage(response[i]["fields"]["text"])
+        			}
+        		}
+				}});
+}
+
+function getNewMessages(){
+	if (got == false) {return}
+		else{
+	var data = {
+					me:me,
+					pair:pair,
+					timestamp:timestamp,
+					csrfmiddlewaretoken : '{{ csrf_token }}'
+				};
+    $.ajax({
+            type: "POST",
+            url : "/getNewMessages/",
+            data: data,
+        	success: function (response) {
+        		if (got == false) {return}
+        		timestamp = response[response.length-1]["fields"]["order"]
+        		for (var i = 0; i < response.length; i++) {
+        			if (response[i]["fields"]["sender"] == me) {
+        				addSentMessage(response[i]["fields"]["text"])
+        			}
+        			else{
+        				addRecievedMessage(response[i]["fields"]["text"])
+        			}
+        		}
+				}});}
 }
 
 function clearInput() {
